@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>LeetCode Heatmap Customizer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main class="panel">
+    <header class="heading">
+      <div class="mark" aria-hidden="true">▦</div>
+      <div><h1>Heatmap Customizer</h1><p>Make the last 30 days yours</p></div>
+    </header>
+    <section class="toggle-row" aria-label="Customization setting">
+      <div><strong>Customization</strong><span id="status" class="status">Loading…</span></div>
+      <label class="switch"><input id="enabled" type="checkbox" aria-label="Enable heatmap customization"><span class="slider"></span></label>
+    </section>
+    <section class="preview-section">
+      <div class="section-title"><strong>30-day preview</strong><span>Randomized greens</span></div>
+      <div id="preview" class="preview" aria-label="Pattern preview"></div>
+    </section>
+    <div class="actions"><button id="regenerate" class="primary">↻ &nbsp;Regenerate pattern</button><button id="restore" class="secondary">Restore original colors</button></div>
+    <p id="notice" class="notice" role="status"></p>
+    <footer>Changes are local and cosmetic</footer>
+  </main>
+  <script src="pattern.js"></script>
+  <script src="storage.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+(() => {
+  const api = globalThis.HeatmapStorage;
+  const patternApi = globalThis.HeatmapPattern;
+  const originals = new WeakMap();
+  let enabled = false;
+  let pattern = [];
+  let observer = null;
+  let resizeHandler = null;
+  let routeTimer = null;
+  let lastUrl = location.href;
+  let scheduled = false;
+
+  function restoreCell(cell) {
+    const original = originals.get(cell);
+    if (!original) return;
+    if (original.fill === null) cell.removeAttribute("fill");
+    else cell.setAttribute("fill", original.fill);
+    if (original.styleValue) cell.style.setProperty("fill", original.styleValue, original.priority);
+    else cell.style.removeProperty("fill");
+    originals.delete(cell);
+  }
+
+  function restoreAll() {
+    document.querySelectorAll("svg rect.cursor-pointer").forEach(restoreCell);
+  }
+
+  function visibleHeatmaps() {
+    return [...document.querySelectorAll("svg")]
+      .map(svg => ({ svg, cells: [...svg.querySelectorAll("rect.cursor-pointer")], box: svg.getBoundingClientRect() }))
+      .filter(item => {
+        let node = item.svg;
+        let visible = true;
+        while (node && node.nodeType === Node.ELEMENT_NODE) {
+          const style = getComputedStyle(node);
+          if (style.display === "none" || style.visibility === "hidden" || Number(style.opacity) === 0) {
+            visible = false;
+            break;
+          }
+          node = node.parentElement;
+        }
+        return visible && item.box.width > 100 && item.box.height > 40 && item.cells.length > 100;
+      })
+      .sort((a, b) => b.cells.length - a.cells.length);
+  }
+
+  function paint() {
+    scheduled = false;
+    if (!enabled || !location.hostname.endsWith("leetcode.com")) return;
+    const best = visibleHeatmaps()[0];
+    if (!best) return;
+
+    // Clear stale painted cells in previously selected visible charts before selecting the last 30.
+    const target = new Set(best.cells.slice(-30));
+    document.querySelectorAll("svg rect.cursor-pointer").forEach(cell => {
+      if (originals.has(cell) && !target.has(cell)) restoreCell(cell);
+    });
+    [...target].forEach((cell, index) => {
+      if (!originals.has(cell)) {
+        originals.set(cell, {
+          fill: cell.getAttribute("fill"),
+          styleValue: cell.style.getPropertyValue("fill"),
+          priority: cell.style.getPropertyPriority("fill")
+        });
+      }
+      const color = pattern[index];
+      if (cell.style.getPropertyValue("fill") !== color || cell.style.getPropertyPriority("fill") !== "important") {
+        cell.style.setProperty("fill", color, "important");
+      }
+    });
+  }
+
+  function schedulePaint() {
+    if (scheduled || !enabled) return;
+    scheduled = true;
+    requestAnimationFrame(paint);
+  }
+
+  function stop() {
+    enabled = false;
+    if (observer) observer.disconnect();
+    observer = null;
+    if (resizeHandler) window.removeEventListener("resize", resizeHandler);
+    resizeHandler = null;
+    if (routeTimer) clearInterval(routeTimer);
+    routeTimer = null;
+    restoreAll();
+  }
+
+  function start(nextPattern) {
+    pattern = patternApi.isValidPattern(nextPattern) ? nextPattern : patternApi.generatePattern();
+    if (enabled) {
+      schedulePaint();
+      return;
+    }
+    enabled = true;
+    observer = new MutationObserver(schedulePaint);
+    observer.observe(document.body, { childList: true, subtree: true });
+    resizeHandler = schedulePaint;
+    window.addEventListener("resize", resizeHandler);
+    routeTimer = setInterval(() => {
+      if (location.href !== lastUrl) {
+        lastUrl = location.href;
+        schedulePaint();
+      }
+    }, 500);
+    schedulePaint();
+  }
+
+  async function sync() {
+    try {
+      const settings = await api.getSettings();
+      if (settings.enabled) start(settings.pattern);
+      else stop();
+    } catch (error) {
+      console.error("Heatmap Customizer: unable to read settings", error);
+      stop();
+    }
+  }
+
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area === "local" && (changes.enabled || changes.pattern)) sync();
+  });
+  chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
+    if (message?.type === "HEATMAP_SYNC") {
+      sync().then(() => sendResponse({ ok: true })).catch(error => sendResponse({ ok: false, error: String(error) }));
+      return true;
+    }
+    if (message?.type === "HEATMAP_RESTORE") {
+      stop();
+      sendResponse({ ok: true });
+    }
+    return undefined;
+  });
+
+  sync();
+})();

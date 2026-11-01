@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "LeetCode Heatmap Customizer",
+  "version": "1.0.0",
+  "description": "Customize the last 30 visible LeetCode profile heatmap cells locally.",
+  "permissions": ["storage", "activeTab"],
+  "action": {
+    "default_title": "LeetCode Heatmap Customizer",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://leetcode.com/u/*", "https://leetcode.com/profile/*"],
+      "js": ["pattern.js", "storage.js", "content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+* { box-sizing: border-box; }
+body { width: 330px; margin: 0; background: #f7f8fa; color: #18212b; font: 13px/1.4 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+.panel { padding: 20px; }
+.heading { display: flex; align-items: center; gap: 11px; margin-bottom: 19px; }
+.mark { display: grid; place-items: center; width: 39px; height: 39px; border-radius: 12px; background: #e5f5e9; color: #216e39; font-size: 23px; }
+h1 { margin: 0; font-size: 15px; letter-spacing: -.2px; }
+.heading p { margin: 3px 0 0; color: #77818b; font-size: 11px; }
+.toggle-row { display: flex; justify-content: space-between; align-items: center; border: 1px solid #e6e9ec; border-radius: 12px; background: white; padding: 12px; }
+.toggle-row strong, .status { display: block; }
+.status { margin-top: 2px; color: #7c8792; font-size: 11px; }
+.status.on { color: #278443; }
+.switch { position: relative; width: 42px; height: 24px; }
+.switch input { width: 0; height: 0; opacity: 0; }
+.slider { position: absolute; inset: 0; cursor: pointer; border-radius: 20px; background: #d5dbe0; transition: .2s; }
+.slider::before { content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; border-radius: 50%; background: white; box-shadow: 0 1px 3px #0002; transition: .2s; }
+.switch input:checked + .slider { background: #30a14e; }
+.switch input:checked + .slider::before { transform: translateX(18px); }
+.switch input:focus-visible + .slider { outline: 2px solid #216e39; outline-offset: 2px; }
+.preview-section { margin: 19px 0; }
+.section-title { display: flex; justify-content: space-between; margin-bottom: 9px; }
+.section-title span { color: #89939c; font-size: 10px; }
+.preview { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; padding: 11px; border: 1px solid #e8ebee; border-radius: 10px; background: white; }
+.preview-cell { aspect-ratio: 1; border-radius: 3px; }
+.actions { display: grid; gap: 8px; }
+button { width: 100%; border: 0; border-radius: 9px; padding: 10px; cursor: pointer; font: inherit; font-weight: 600; }
+button:disabled { cursor: wait; opacity: .6; }
+.primary { background: #216e39; color: white; }
+.primary:hover { background: #195a2e; }
+.secondary { border: 1px solid #e1e5e8; background: white; color: #46515b; }
+.secondary:hover { background: #f0f3f4; }
+.notice { min-height: 15px; margin: 8px 0 0; color: #278443; text-align: center; font-size: 11px; }
+.notice.error { color: #b42318; }
+footer { margin-top: 2px; color: #929ba3; text-align: center; font-size: 10px; }
