@@ -11,6 +11,19 @@
   let lastUrl = location.href;
   let scheduled = false;
 
+  function syncHover(disabled) {
+    const existing = document.getElementById("no-heatmap-hover");
+    if (!disabled) {
+      existing?.remove();
+      return;
+    }
+    if (existing) return;
+    const style = document.createElement("style");
+    style.id = "no-heatmap-hover";
+    style.textContent = "svg rect.cursor-pointer { pointer-events: none !important; }";
+    (document.head || document.documentElement).appendChild(style);
+  }
+
   function restoreCell(cell) {
     const original = originals.get(cell);
     if (!original) return;
@@ -114,6 +127,7 @@
   async function sync() {
     try {
       const settings = await api.getSettings();
+      syncHover(settings.hoverDisabled);
       if (settings.enabled) start(settings.pattern, settings.olderPattern);
       else stop();
     } catch (error) {
@@ -123,7 +137,7 @@
   }
 
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === "local" && (changes.enabled || changes.pattern || changes.olderPattern)) sync();
+    if (area === "local" && (changes.enabled || changes.hoverDisabled || changes.pattern || changes.olderPattern)) sync();
   });
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message?.type === "HEATMAP_SYNC") {

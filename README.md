@@ -8,7 +8,7 @@ A Manifest V3 Chrome extension that applies a saved randomized green pattern to 
 2. Choose **Load unpacked** and select this project folder (the folder containing `manifest.json`).
 3. Open a LeetCode profile at `https://leetcode.com/u/<username>/`, then open the extension popup and turn customization on.
 
-Both patterns are generated once and saved with `chrome.storage.local`. Use **Regenerate pattern** to replace them. **Restore original colors** disables painting for that page and restores the original SVG `fill` attribute and inline fill style. Turn the switch back on to resume.
+Both patterns are generated once and saved with `chrome.storage.local`. Use **Regenerate pattern** to replace them. **Restore original colors** disables painting for that page and restores the original SVG `fill` attribute and inline fill style. Turn the switch back on to resume. The **Disable heatmap hover** toggle independently blocks pointer interaction with heatmap cells, and can be switched off to restore LeetCode's hover behavior.
 
 ## Check desktop and responsive layouts
 

@@ -7,6 +7,7 @@ h1 { margin: 0; font-size: 15px; letter-spacing: -.2px; }
 .heading p { margin: 3px 0 0; color: #77818b; font-size: 11px; }
 .toggle-row { display: flex; justify-content: space-between; align-items: center; border: 1px solid #e6e9ec; border-radius: 12px; background: white; padding: 12px; }
 .toggle-row strong, .status { display: block; }
+.option-row { margin-top: 9px; }
 .status { margin-top: 2px; color: #7c8792; font-size: 11px; }
 .status.on { color: #278443; }
 .switch { position: relative; width: 42px; height: 24px; }

@@ -1,5 +1,7 @@
 (() => {
   const enabledInput = document.getElementById("enabled");
+  const hoverDisabledInput = document.getElementById("hover-disabled");
+  const hoverStatus = document.getElementById("hover-status");
   const status = document.getElementById("status");
   const preview = document.getElementById("preview");
   const olderPreview = document.getElementById("older-preview");
@@ -33,6 +35,9 @@
 
   function render() {
     enabledInput.checked = settings.enabled;
+    hoverDisabledInput.checked = settings.hoverDisabled;
+    hoverStatus.textContent = settings.hoverDisabled ? "Off · hover effects disabled" : "On · hover effects active";
+    hoverStatus.classList.toggle("on", settings.hoverDisabled);
     status.textContent = settings.enabled ? "On · pattern active" : "Off · original colors";
     status.classList.toggle("on", settings.enabled);
     drawPreview(settings.pattern);
@@ -58,6 +63,7 @@
   }
 
   enabledInput.addEventListener("change", () => setState({ enabled: enabledInput.checked }, enabledInput.checked ? "Customization enabled" : "Original colors restored"));
+  hoverDisabledInput.addEventListener("change", () => setState({ hoverDisabled: hoverDisabledInput.checked }, hoverDisabledInput.checked ? "Heatmap hover disabled" : "Heatmap hover enabled"));
   regenerate.addEventListener("click", async () => {
     const pattern = globalThis.HeatmapPattern.generatePattern();
     const olderPattern = globalThis.HeatmapPattern.generateOlderPattern();
