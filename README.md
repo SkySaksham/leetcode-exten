@@ -1,6 +1,6 @@
 # LeetCode Heatmap Customizer
 
-A Manifest V3 Chrome extension that applies a saved, randomized green pattern to the last 30 visible cells of a LeetCode profile heatmap. It changes only client-side SVG styling. It does not submit solutions, call APIs, or change LeetCode data.
+A Manifest V3 Chrome extension that applies a saved randomized green pattern to the most recent 30 days of a LeetCode profile heatmap, plus light green to 14 randomly selected days in the preceding 30-day period. It changes only client-side SVG styling. It does not submit solutions, call APIs, or change LeetCode data.
 
 ## Install
 
@@ -8,14 +8,14 @@ A Manifest V3 Chrome extension that applies a saved, randomized green pattern to
 2. Choose **Load unpacked** and select this project folder (the folder containing `manifest.json`).
 3. Open a LeetCode profile at `https://leetcode.com/u/<username>/`, then open the extension popup and turn customization on.
 
-The pattern is generated once and saved with `chrome.storage.local`. Use **Regenerate pattern** to replace it. **Restore original colors** disables painting for that page and restores the original SVG `fill` attribute and inline fill style. Turn the switch back on to resume.
+Both patterns are generated once and saved with `chrome.storage.local`. Use **Regenerate pattern** to replace them. **Restore original colors** disables painting for that page and restores the original SVG `fill` attribute and inline fill style. Turn the switch back on to resume.
 
 ## Check desktop and responsive layouts
 
-1. Enable the extension on a profile and confirm the last 30 visible calendar cells use the preview colors.
+1. Enable the extension on a profile and confirm the recent 30 calendar cells use the randomized green preview and exactly 14 cells in the previous 30-day period use light green.
 2. Refresh the profile; the same pattern should remain. Turn the switch off and verify the page's original fills return.
 3. Turn it on, regenerate, and confirm the preview and heatmap change together.
-4. In Chrome DevTools, toggle the device toolbar and try narrow and wide viewport sizes. The visible chart should receive the same 30-color sequence after responsive reflow.
+4. In Chrome DevTools, toggle the device toolbar and try narrow and wide viewport sizes. Both date ranges should retain their patterns after responsive reflow.
 5. Navigate to another `/u/<username>/` profile and verify it is customized; navigate away and back to exercise SPA updates.
 
 ## Debug

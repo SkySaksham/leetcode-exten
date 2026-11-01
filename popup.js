@@ -2,6 +2,7 @@
   const enabledInput = document.getElementById("enabled");
   const status = document.getElementById("status");
   const preview = document.getElementById("preview");
+  const olderPreview = document.getElementById("older-preview");
   const notice = document.getElementById("notice");
   const regenerate = document.getElementById("regenerate");
   const restore = document.getElementById("restore");
@@ -21,11 +22,21 @@
     }));
   }
 
+  function drawOlderPreview(pattern) {
+    olderPreview.replaceChildren(...pattern.map(highlighted => {
+      const cell = document.createElement("span");
+      cell.className = `preview-cell${highlighted ? "" : " unchanged"}`;
+      if (highlighted) cell.style.backgroundColor = globalThis.HeatmapPattern.palette.level1;
+      return cell;
+    }));
+  }
+
   function render() {
     enabledInput.checked = settings.enabled;
     status.textContent = settings.enabled ? "On · pattern active" : "Off · original colors";
     status.classList.toggle("on", settings.enabled);
     drawPreview(settings.pattern);
+    drawOlderPreview(settings.olderPattern);
   }
 
   async function notifyTab(type = "HEATMAP_SYNC") {
@@ -49,7 +60,8 @@
   enabledInput.addEventListener("change", () => setState({ enabled: enabledInput.checked }, enabledInput.checked ? "Customization enabled" : "Original colors restored"));
   regenerate.addEventListener("click", async () => {
     const pattern = globalThis.HeatmapPattern.generatePattern();
-    await setState({ pattern }, "New pattern saved");
+    const olderPattern = globalThis.HeatmapPattern.generateOlderPattern();
+    await setState({ pattern, olderPattern }, "New patterns saved");
   });
   restore.addEventListener("click", async () => {
     await setState({ enabled: false }, "Original colors restored");

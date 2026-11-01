@@ -4,6 +4,7 @@
   const originals = new WeakMap();
   let enabled = false;
   let pattern = [];
+  let olderPattern = [];
   let observer = null;
   let resizeHandler = null;
   let routeTimer = null;
@@ -50,11 +51,13 @@
     if (!best) return;
 
     // Clear stale painted cells in previously selected visible charts before selecting the last 30.
-    const target = new Set(best.cells.slice(-30));
+    const recentCells = best.cells.slice(-30);
+    const earlierCells = best.cells.slice(-60, -30);
+    const target = new Set([...recentCells, ...earlierCells.filter((_cell, index) => olderPattern[index])]);
     document.querySelectorAll("svg rect.cursor-pointer").forEach(cell => {
       if (originals.has(cell) && !target.has(cell)) restoreCell(cell);
     });
-    [...target].forEach((cell, index) => {
+    [...target].forEach(cell => {
       if (!originals.has(cell)) {
         originals.set(cell, {
           fill: cell.getAttribute("fill"),
@@ -62,7 +65,8 @@
           priority: cell.style.getPropertyPriority("fill")
         });
       }
-      const color = pattern[index];
+      const recentIndex = recentCells.indexOf(cell);
+      const color = recentIndex >= 0 ? pattern[recentIndex] : patternApi.palette.level1;
       if (cell.style.getPropertyValue("fill") !== color || cell.style.getPropertyPriority("fill") !== "important") {
         cell.style.setProperty("fill", color, "important");
       }
@@ -86,8 +90,9 @@
     restoreAll();
   }
 
-  function start(nextPattern) {
+  function start(nextPattern, nextOlderPattern) {
     pattern = patternApi.isValidPattern(nextPattern) ? nextPattern : patternApi.generatePattern();
+    olderPattern = patternApi.isValidOlderPattern(nextOlderPattern) ? nextOlderPattern : patternApi.generateOlderPattern();
     if (enabled) {
       schedulePaint();
       return;
@@ -109,7 +114,7 @@
   async function sync() {
     try {
       const settings = await api.getSettings();
-      if (settings.enabled) start(settings.pattern);
+      if (settings.enabled) start(settings.pattern, settings.olderPattern);
       else stop();
     } catch (error) {
       console.error("Heatmap Customizer: unable to read settings", error);
@@ -118,7 +123,7 @@
   }
 
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === "local" && (changes.enabled || changes.pattern)) sync();
+    if (area === "local" && (changes.enabled || changes.pattern || changes.olderPattern)) sync();
   });
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message?.type === "HEATMAP_SYNC") {

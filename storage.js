@@ -1,8 +1,9 @@
 (() => {
-  const KEYS = { enabled: "enabled", pattern: "pattern", palette: "palette" };
+  const KEYS = { enabled: "enabled", pattern: "pattern", olderPattern: "olderPattern", palette: "palette" };
   const defaults = {
     enabled: false,
     pattern: globalThis.HeatmapPattern.generatePattern(),
+    olderPattern: globalThis.HeatmapPattern.generateOlderPattern(),
     palette: globalThis.HeatmapPattern.palette
   };
 
@@ -11,9 +12,10 @@
     const result = {
       enabled: typeof stored.enabled === "boolean" ? stored.enabled : defaults.enabled,
       pattern: globalThis.HeatmapPattern.isValidPattern(stored.pattern) ? stored.pattern : defaults.pattern,
+      olderPattern: globalThis.HeatmapPattern.isValidOlderPattern(stored.olderPattern) ? stored.olderPattern : defaults.olderPattern,
       palette: stored.palette && typeof stored.palette === "object" ? stored.palette : defaults.palette
     };
-    if (typeof stored.enabled !== "boolean" || !globalThis.HeatmapPattern.isValidPattern(stored.pattern) || !stored.palette) {
+    if (typeof stored.enabled !== "boolean" || !globalThis.HeatmapPattern.isValidPattern(stored.pattern) || !globalThis.HeatmapPattern.isValidOlderPattern(stored.olderPattern) || !stored.palette) {
       await chrome.storage.local.set(result);
     }
     return result;
@@ -23,6 +25,7 @@
     const validated = {};
     if (typeof settings.enabled === "boolean") validated.enabled = settings.enabled;
     if (globalThis.HeatmapPattern.isValidPattern(settings.pattern)) validated.pattern = settings.pattern;
+    if (globalThis.HeatmapPattern.isValidOlderPattern(settings.olderPattern)) validated.olderPattern = settings.olderPattern;
     if (settings.palette && typeof settings.palette === "object") validated.palette = settings.palette;
     await chrome.storage.local.set(validated);
     return getSettings();

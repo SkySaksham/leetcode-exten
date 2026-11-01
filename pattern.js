@@ -31,5 +31,20 @@
     return Array.isArray(value) && value.length === 30 && value.every(color => levels.includes(color));
   }
 
-  globalThis.HeatmapPattern = { palette, generatePattern, isValidPattern };
+  function generateOlderPattern() {
+    const result = Array(30).fill(false);
+    const indices = Array.from({ length: 30 }, (_, index) => index);
+    for (let i = indices.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [indices[i], indices[j]] = [indices[j], indices[i]];
+    }
+    indices.slice(0, 14).forEach(index => { result[index] = true; });
+    return result;
+  }
+
+  function isValidOlderPattern(value) {
+    return Array.isArray(value) && value.length === 30 && value.every(cell => typeof cell === "boolean") && value.filter(Boolean).length === 14;
+  }
+
+  globalThis.HeatmapPattern = { palette, generatePattern, isValidPattern, generateOlderPattern, isValidOlderPattern };
 })();

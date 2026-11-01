@@ -21,6 +21,8 @@ h1 { margin: 0; font-size: 15px; letter-spacing: -.2px; }
 .section-title span { color: #89939c; font-size: 10px; }
 .preview { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; padding: 11px; border: 1px solid #e8ebee; border-radius: 10px; background: white; }
 .preview-cell { aspect-ratio: 1; border-radius: 3px; }
+.preview-cell.unchanged { background: #ebedf0; }
+.older-preview-section { margin-top: -7px; }
 .actions { display: grid; gap: 8px; }
 button { width: 100%; border: 0; border-radius: 9px; padding: 10px; cursor: pointer; font: inherit; font-weight: 600; }
 button:disabled { cursor: wait; opacity: .6; }
