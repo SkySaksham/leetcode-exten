@@ -2,14 +2,39 @@
   const api = globalThis.HeatmapStorage;
   const patternApi = globalThis.HeatmapPattern;
   const originals = new WeakMap();
+  const originalStats = new WeakMap();
   let enabled = false;
   let pattern = [];
   let olderPattern = [];
   let observer = null;
+  let statsObserver = null;
+  let latestSettings = null;
   let resizeHandler = null;
   let routeTimer = null;
   let lastUrl = location.href;
   let scheduled = false;
+  let statsEnabled = false;
+  let totalActiveDays = 10;
+  let maxStreak = 30;
+
+  function syncStats(settings) {
+    statsEnabled = settings.statsEnabled;
+    totalActiveDays = settings.totalActiveDays;
+    maxStreak = settings.maxStreak;
+    const values = [["Total active days:", totalActiveDays], ["Max streak:", maxStreak]];
+    for (const [label, value] of values) {
+      const target = [...document.querySelectorAll("span")].find(el => el.textContent.trim() === label)?.nextElementSibling;
+      if (!target) continue;
+      if (statsEnabled) {
+        if (!originalStats.has(target)) originalStats.set(target, target.textContent);
+        const text = String(value);
+        if (target.textContent !== text) target.textContent = text;
+      } else if (originalStats.has(target)) {
+        target.textContent = originalStats.get(target);
+        originalStats.delete(target);
+      }
+    }
+  }
 
   function syncHover(disabled) {
     const existing = document.getElementById("no-heatmap-hover");
@@ -127,7 +152,15 @@
   async function sync() {
     try {
       const settings = await api.getSettings();
+      latestSettings = settings;
       syncHover(settings.hoverDisabled);
+      syncStats(settings);
+      if (!statsObserver && document.body) {
+        statsObserver = new MutationObserver(() => {
+          if (latestSettings) syncStats(latestSettings);
+        });
+        statsObserver.observe(document.body, { childList: true, subtree: true });
+      }
       if (settings.enabled) start(settings.pattern, settings.olderPattern);
       else stop();
     } catch (error) {
@@ -137,7 +170,7 @@
   }
 
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === "local" && (changes.enabled || changes.hoverDisabled || changes.pattern || changes.olderPattern)) sync();
+    if (area === "local" && (changes.enabled || changes.hoverDisabled || changes.statsEnabled || changes.totalActiveDays || changes.maxStreak || changes.pattern || changes.olderPattern)) sync();
   });
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message?.type === "HEATMAP_SYNC") {

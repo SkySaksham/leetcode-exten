@@ -2,6 +2,10 @@
   const enabledInput = document.getElementById("enabled");
   const hoverDisabledInput = document.getElementById("hover-disabled");
   const hoverStatus = document.getElementById("hover-status");
+  const statsEnabledInput = document.getElementById("stats-enabled");
+  const statsStatus = document.getElementById("stats-status");
+  const activeDaysInput = document.getElementById("active-days");
+  const maxStreakInput = document.getElementById("max-streak");
   const status = document.getElementById("status");
   const preview = document.getElementById("preview");
   const olderPreview = document.getElementById("older-preview");
@@ -36,6 +40,13 @@
   function render() {
     enabledInput.checked = settings.enabled;
     hoverDisabledInput.checked = settings.hoverDisabled;
+    statsEnabledInput.checked = settings.statsEnabled;
+    statsStatus.textContent = settings.statsEnabled ? "On · values shown on profile" : "Off · LeetCode values shown";
+    statsStatus.classList.toggle("on", settings.statsEnabled);
+    activeDaysInput.value = settings.totalActiveDays;
+    maxStreakInput.value = settings.maxStreak;
+    activeDaysInput.disabled = !settings.statsEnabled;
+    maxStreakInput.disabled = !settings.statsEnabled;
     hoverStatus.textContent = settings.hoverDisabled ? "Off · hover effects disabled" : "On · hover effects active";
     hoverStatus.classList.toggle("on", settings.hoverDisabled);
     status.textContent = settings.enabled ? "On · pattern active" : "Off · original colors";
@@ -64,6 +75,18 @@
 
   enabledInput.addEventListener("change", () => setState({ enabled: enabledInput.checked }, enabledInput.checked ? "Customization enabled" : "Original colors restored"));
   hoverDisabledInput.addEventListener("change", () => setState({ hoverDisabled: hoverDisabledInput.checked }, hoverDisabledInput.checked ? "Heatmap hover disabled" : "Heatmap hover enabled"));
+  statsEnabledInput.addEventListener("change", () => setState({ statsEnabled: statsEnabledInput.checked }, statsEnabledInput.checked ? "Custom profile stats enabled" : "Custom profile stats disabled"));
+  async function saveNumber(input, key, label) {
+    const value = Number(input.value);
+    if (!Number.isSafeInteger(value) || value < 0) {
+      message(`${label} must be a whole number of 0 or more`, true);
+      render();
+      return;
+    }
+    await setState({ [key]: value }, `${label} saved`);
+  }
+  activeDaysInput.addEventListener("change", () => saveNumber(activeDaysInput, "totalActiveDays", "Total active days"));
+  maxStreakInput.addEventListener("change", () => saveNumber(maxStreakInput, "maxStreak", "Max streak"));
   regenerate.addEventListener("click", async () => {
     const pattern = globalThis.HeatmapPattern.generatePattern();
     const olderPattern = globalThis.HeatmapPattern.generateOlderPattern();

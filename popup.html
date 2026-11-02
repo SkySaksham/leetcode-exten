@@ -20,6 +20,13 @@
       <div><strong>Disable heatmap hover</strong><span id="hover-status" class="status">Loading...</span></div>
       <label class="switch"><input id="hover-disabled" type="checkbox" aria-label="Disable heatmap hover effects"><span class="slider"></span></label>
     </section>
+    <section class="stats-section" aria-label="Profile statistics setting">
+      <div class="stats-heading"><div><strong>Custom profile stats</strong><span id="stats-status" class="status">Loading...</span></div>
+        <label class="switch"><input id="stats-enabled" type="checkbox" aria-label="Enable custom profile statistics"><span class="slider"></span></label>
+      </div>
+      <label class="number-field">Total active days<input id="active-days" type="number" min="0" step="1" inputmode="numeric"></label>
+      <label class="number-field">Max streak<input id="max-streak" type="number" min="0" step="1" inputmode="numeric"></label>
+    </section>
     <section class="preview-section">
       <div class="section-title"><strong>30-day preview</strong><span>Randomized greens</span></div>
       <div id="preview" class="preview" aria-label="Pattern preview"></div>

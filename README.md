@@ -10,6 +10,8 @@ A Manifest V3 Chrome extension that applies a saved randomized green pattern to 
 
 Both patterns are generated once and saved with `chrome.storage.local`. Use **Regenerate pattern** to replace them. **Restore original colors** disables painting for that page and restores the original SVG `fill` attribute and inline fill style. Turn the switch back on to resume. The **Disable heatmap hover** toggle independently blocks pointer interaction with heatmap cells, and can be switched off to restore LeetCode's hover behavior.
 
+The **Custom profile stats** section lets you set the displayed **Total active days** and **Max streak** values. Turn its toggle on to replace those two labels' adjacent values on your profile; turn it off to restore the values LeetCode displays. Values must be whole numbers of 0 or more, and are saved locally.
+
 ## Check desktop and responsive layouts
 
 1. Enable the extension on a profile and confirm the recent 30 calendar cells use the randomized green preview and exactly 14 cells in the previous 30-day period use light green.

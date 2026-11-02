@@ -8,6 +8,11 @@ h1 { margin: 0; font-size: 15px; letter-spacing: -.2px; }
 .toggle-row { display: flex; justify-content: space-between; align-items: center; border: 1px solid #e6e9ec; border-radius: 12px; background: white; padding: 12px; }
 .toggle-row strong, .status { display: block; }
 .option-row { margin-top: 9px; }
+.stats-section { margin-top: 9px; padding: 12px; border: 1px solid #e6e9ec; border-radius: 12px; background: white; }
+.stats-heading { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.stats-heading strong, .stats-heading .status { display: block; }
+.number-field { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 8px; color: #46515b; font-size: 12px; }
+.number-field input { width: 84px; padding: 6px 8px; border: 1px solid #dfe4e8; border-radius: 7px; color: #18212b; font: inherit; }
 .status { margin-top: 2px; color: #7c8792; font-size: 11px; }
 .status.on { color: #278443; }
 .switch { position: relative; width: 42px; height: 24px; }
