@@ -14,6 +14,8 @@ The **Custom profile stats** section lets you set the displayed **Total active d
 
 The **Shift question dates back** toggle changes matching question date labels so the first shown date is yesterday, the next is two days ago, and so on. Turn it off to restore the original labels. This setting applies across LeetCode pages and is saved locally.
 
+The **Remove dropdown buttons** toggle removes buttons containing a `fa-chevron-down` icon from the page. Turn it off to restore the removed elements. Newly rendered matching buttons are handled while the setting is on.
+
 ## Check desktop and responsive layouts
 
 1. Enable the extension on a profile and confirm the recent 30 calendar cells use the randomized green preview and exactly 14 cells in the previous 30-day period use light green.

@@ -4,6 +4,7 @@
   const originals = new WeakMap();
   const originalStats = new WeakMap();
   const originalDates = new WeakMap();
+  const removedDropdowns = new Set();
   let enabled = false;
   let pattern = [];
   let olderPattern = [];
@@ -18,6 +19,27 @@
   let totalActiveDays = 10;
   let maxStreak = 30;
   let questionDatesShifted = false;
+
+  function syncDropdownButtons(settings) {
+    if (settings.dropdownButtonsRemoved) {
+      document.querySelectorAll("svg.fa-chevron-down").forEach(svg => {
+        const button = svg.closest("button, [role=\"button\"]");
+        const node = button || svg;
+        if ([...removedDropdowns].some(record => record.node === node)) return;
+        const marker = document.createComment("LeetCode dropdown placeholder");
+        node.parentNode?.insertBefore(marker, node);
+        if (marker.parentNode) {
+          removedDropdowns.add({ node, marker });
+          node.remove();
+        }
+      });
+      return;
+    }
+    for (const record of removedDropdowns) {
+      if (record.marker.parentNode) record.marker.replaceWith(record.node);
+      removedDropdowns.delete(record);
+    }
+  }
 
   function syncQuestionDates(settings) {
     questionDatesShifted = settings.questionDatesShifted;
@@ -181,9 +203,14 @@
       syncHover(settings.hoverDisabled);
       syncStats(settings);
       syncQuestionDates(settings);
+      syncDropdownButtons(settings);
       if (!statsObserver && document.body) {
         statsObserver = new MutationObserver(() => {
-          if (latestSettings) syncStats(latestSettings);
+          if (latestSettings) {
+            syncStats(latestSettings);
+            syncQuestionDates(latestSettings);
+            syncDropdownButtons(latestSettings);
+          }
         });
         statsObserver.observe(document.body, { childList: true, subtree: true });
       }
@@ -196,7 +223,7 @@
   }
 
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === "local" && (changes.enabled || changes.hoverDisabled || changes.statsEnabled || changes.totalActiveDays || changes.maxStreak || changes.questionDatesShifted || changes.pattern || changes.olderPattern)) sync();
+    if (area === "local" && (changes.enabled || changes.hoverDisabled || changes.statsEnabled || changes.totalActiveDays || changes.maxStreak || changes.questionDatesShifted || changes.dropdownButtonsRemoved || changes.pattern || changes.olderPattern)) sync();
   });
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message?.type === "HEATMAP_SYNC") {

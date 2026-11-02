@@ -8,6 +8,8 @@
   const maxStreakInput = document.getElementById("max-streak");
   const datesShiftedInput = document.getElementById("dates-shifted");
   const datesStatus = document.getElementById("dates-status");
+  const dropdownsRemovedInput = document.getElementById("dropdowns-removed");
+  const dropdownStatus = document.getElementById("dropdown-status");
   const status = document.getElementById("status");
   const preview = document.getElementById("preview");
   const olderPreview = document.getElementById("older-preview");
@@ -52,6 +54,9 @@
     datesShiftedInput.checked = settings.questionDatesShifted;
     datesStatus.textContent = settings.questionDatesShifted ? "On · dates moved back one day" : "Off · original dates shown";
     datesStatus.classList.toggle("on", settings.questionDatesShifted);
+    dropdownsRemovedInput.checked = settings.dropdownButtonsRemoved;
+    dropdownStatus.textContent = settings.dropdownButtonsRemoved ? "On · matching buttons hidden" : "Off · all buttons shown";
+    dropdownStatus.classList.toggle("on", settings.dropdownButtonsRemoved);
     hoverStatus.textContent = settings.hoverDisabled ? "Off · hover effects disabled" : "On · hover effects active";
     hoverStatus.classList.toggle("on", settings.hoverDisabled);
     status.textContent = settings.enabled ? "On · pattern active" : "Off · original colors";
@@ -82,6 +87,7 @@
   hoverDisabledInput.addEventListener("change", () => setState({ hoverDisabled: hoverDisabledInput.checked }, hoverDisabledInput.checked ? "Heatmap hover disabled" : "Heatmap hover enabled"));
   statsEnabledInput.addEventListener("change", () => setState({ statsEnabled: statsEnabledInput.checked }, statsEnabledInput.checked ? "Custom profile stats enabled" : "Custom profile stats disabled"));
   datesShiftedInput.addEventListener("change", () => setState({ questionDatesShifted: datesShiftedInput.checked }, datesShiftedInput.checked ? "Question dates shifted back" : "Original question dates restored"));
+  dropdownsRemovedInput.addEventListener("change", () => setState({ dropdownButtonsRemoved: dropdownsRemovedInput.checked }, dropdownsRemovedInput.checked ? "Dropdown buttons removed" : "Dropdown buttons restored"));
   async function saveNumber(input, key, label) {
     const value = Number(input.value);
     if (!Number.isSafeInteger(value) || value < 0) {
