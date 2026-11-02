@@ -3,6 +3,7 @@
   const patternApi = globalThis.HeatmapPattern;
   const originals = new WeakMap();
   const originalStats = new WeakMap();
+  const originalDates = new WeakMap();
   let enabled = false;
   let pattern = [];
   let olderPattern = [];
@@ -16,6 +17,30 @@
   let statsEnabled = false;
   let totalActiveDays = 10;
   let maxStreak = 30;
+  let questionDatesShifted = false;
+
+  function syncQuestionDates(settings) {
+    questionDatesShifted = settings.questionDatesShifted;
+    const datePattern = /^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2}$/i;
+    const labels = [...document.querySelectorAll("div.h-full.overflow-hidden.text-ellipsis")]
+      .filter(el => datePattern.test(el.textContent.trim()));
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    labels.forEach((el, index) => {
+      if (!questionDatesShifted) {
+        if (originalDates.has(el)) {
+          el.textContent = originalDates.get(el);
+          originalDates.delete(el);
+        }
+        return;
+      }
+      if (!originalDates.has(el)) originalDates.set(el, el.textContent);
+      const date = new Date(today);
+      date.setDate(date.getDate() - (index + 1));
+      const display = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      if (el.textContent.trim() !== display) el.textContent = display;
+    });
+  }
 
   function syncStats(settings) {
     statsEnabled = settings.statsEnabled;
@@ -155,6 +180,7 @@
       latestSettings = settings;
       syncHover(settings.hoverDisabled);
       syncStats(settings);
+      syncQuestionDates(settings);
       if (!statsObserver && document.body) {
         statsObserver = new MutationObserver(() => {
           if (latestSettings) syncStats(latestSettings);
@@ -170,7 +196,7 @@
   }
 
   chrome.storage.onChanged.addListener((changes, area) => {
-    if (area === "local" && (changes.enabled || changes.hoverDisabled || changes.statsEnabled || changes.totalActiveDays || changes.maxStreak || changes.pattern || changes.olderPattern)) sync();
+    if (area === "local" && (changes.enabled || changes.hoverDisabled || changes.statsEnabled || changes.totalActiveDays || changes.maxStreak || changes.questionDatesShifted || changes.pattern || changes.olderPattern)) sync();
   });
   chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     if (message?.type === "HEATMAP_SYNC") {

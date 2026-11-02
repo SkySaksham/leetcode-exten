@@ -6,6 +6,8 @@
   const statsStatus = document.getElementById("stats-status");
   const activeDaysInput = document.getElementById("active-days");
   const maxStreakInput = document.getElementById("max-streak");
+  const datesShiftedInput = document.getElementById("dates-shifted");
+  const datesStatus = document.getElementById("dates-status");
   const status = document.getElementById("status");
   const preview = document.getElementById("preview");
   const olderPreview = document.getElementById("older-preview");
@@ -47,6 +49,9 @@
     maxStreakInput.value = settings.maxStreak;
     activeDaysInput.disabled = !settings.statsEnabled;
     maxStreakInput.disabled = !settings.statsEnabled;
+    datesShiftedInput.checked = settings.questionDatesShifted;
+    datesStatus.textContent = settings.questionDatesShifted ? "On · dates moved back one day" : "Off · original dates shown";
+    datesStatus.classList.toggle("on", settings.questionDatesShifted);
     hoverStatus.textContent = settings.hoverDisabled ? "Off · hover effects disabled" : "On · hover effects active";
     hoverStatus.classList.toggle("on", settings.hoverDisabled);
     status.textContent = settings.enabled ? "On · pattern active" : "Off · original colors";
@@ -76,6 +81,7 @@
   enabledInput.addEventListener("change", () => setState({ enabled: enabledInput.checked }, enabledInput.checked ? "Customization enabled" : "Original colors restored"));
   hoverDisabledInput.addEventListener("change", () => setState({ hoverDisabled: hoverDisabledInput.checked }, hoverDisabledInput.checked ? "Heatmap hover disabled" : "Heatmap hover enabled"));
   statsEnabledInput.addEventListener("change", () => setState({ statsEnabled: statsEnabledInput.checked }, statsEnabledInput.checked ? "Custom profile stats enabled" : "Custom profile stats disabled"));
+  datesShiftedInput.addEventListener("change", () => setState({ questionDatesShifted: datesShiftedInput.checked }, datesShiftedInput.checked ? "Question dates shifted back" : "Original question dates restored"));
   async function saveNumber(input, key, label) {
     const value = Number(input.value);
     if (!Number.isSafeInteger(value) || value < 0) {

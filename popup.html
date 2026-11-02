@@ -27,6 +27,10 @@
       <label class="number-field">Total active days<input id="active-days" type="number" min="0" step="1" inputmode="numeric"></label>
       <label class="number-field">Max streak<input id="max-streak" type="number" min="0" step="1" inputmode="numeric"></label>
     </section>
+    <section class="toggle-row option-row" aria-label="Question date setting">
+      <div><strong>Shift question dates back</strong><span id="dates-status" class="status">Loading...</span></div>
+      <label class="switch"><input id="dates-shifted" type="checkbox" aria-label="Shift question dates back by one day each"><span class="slider"></span></label>
+    </section>
     <section class="preview-section">
       <div class="section-title"><strong>30-day preview</strong><span>Randomized greens</span></div>
       <div id="preview" class="preview" aria-label="Pattern preview"></div>

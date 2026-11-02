@@ -12,6 +12,8 @@ Both patterns are generated once and saved with `chrome.storage.local`. Use **Re
 
 The **Custom profile stats** section lets you set the displayed **Total active days** and **Max streak** values. Turn its toggle on to replace those two labels' adjacent values on your profile; turn it off to restore the values LeetCode displays. Values must be whole numbers of 0 or more, and are saved locally.
 
+The **Shift question dates back** toggle changes matching question date labels so the first shown date is yesterday, the next is two days ago, and so on. Turn it off to restore the original labels. This setting applies across LeetCode pages and is saved locally.
+
 ## Check desktop and responsive layouts
 
 1. Enable the extension on a profile and confirm the recent 30 calendar cells use the randomized green preview and exactly 14 cells in the previous 30-day period use light green.
@@ -29,7 +31,7 @@ The **Custom profile stats** section lets you set the displayed **Total active d
 
 ## Source files
 
-- `manifest.json`: permissions and profile-only content script matches.
+- `manifest.json`: permissions and LeetCode content script matches.
 - `pattern.js`: green palette, generation, and validation.
 - `storage.js`: persistent settings defaults and validation.
 - `content.js`: visible heatmap discovery, painting, observation, and restoration.

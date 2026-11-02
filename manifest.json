@@ -10,7 +10,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://leetcode.com/u/*", "https://leetcode.com/profile/*"],
+      "matches": ["https://leetcode.com/*"],
       "js": ["pattern.js", "storage.js", "content.js"],
       "run_at": "document_idle"
     }
