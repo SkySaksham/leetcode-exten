@@ -10,6 +10,8 @@
   const datesStatus = document.getElementById("dates-status");
   const dropdownsRemovedInput = document.getElementById("dropdowns-removed");
   const dropdownStatus = document.getElementById("dropdown-status");
+  const recentAcShiftedInput = document.getElementById("recent-ac-shifted");
+  const recentAcStatus = document.getElementById("recent-ac-status");
   const status = document.getElementById("status");
   const preview = document.getElementById("preview");
   const olderPreview = document.getElementById("older-preview");
@@ -57,6 +59,9 @@
     dropdownsRemovedInput.checked = settings.dropdownButtonsRemoved;
     dropdownStatus.textContent = settings.dropdownButtonsRemoved ? "On · matching buttons hidden" : "Off · all buttons shown";
     dropdownStatus.classList.toggle("on", settings.dropdownButtonsRemoved);
+    recentAcShiftedInput.checked = settings.recentAcDatesShifted;
+    recentAcStatus.textContent = settings.recentAcDatesShifted ? "On · dates shifted" : "Off · original dates shown";
+    recentAcStatus.classList.toggle("on", settings.recentAcDatesShifted);
     hoverStatus.textContent = settings.hoverDisabled ? "Off · hover effects disabled" : "On · hover effects active";
     hoverStatus.classList.toggle("on", settings.hoverDisabled);
     status.textContent = settings.enabled ? "On · pattern active" : "Off · original colors";
@@ -88,6 +93,7 @@
   statsEnabledInput.addEventListener("change", () => setState({ statsEnabled: statsEnabledInput.checked }, statsEnabledInput.checked ? "Custom profile stats enabled" : "Custom profile stats disabled"));
   datesShiftedInput.addEventListener("change", () => setState({ questionDatesShifted: datesShiftedInput.checked }, datesShiftedInput.checked ? "Question dates shifted back" : "Original question dates restored"));
   dropdownsRemovedInput.addEventListener("change", () => setState({ dropdownButtonsRemoved: dropdownsRemovedInput.checked }, dropdownsRemovedInput.checked ? "Dropdown buttons removed" : "Dropdown buttons restored"));
+  recentAcShiftedInput.addEventListener("change", () => setState({ recentAcDatesShifted: recentAcShiftedInput.checked }, recentAcShiftedInput.checked ? "Recent AC dates shifted" : "Original Recent AC dates restored"));
   async function saveNumber(input, key, label) {
     const value = Number(input.value);
     if (!Number.isSafeInteger(value) || value < 0) {
