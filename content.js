@@ -99,8 +99,11 @@
         return;
       }
       if (!originalDates.has(el)) originalDates.set(el, el.textContent);
-      const days = index + 1;
-      const display = `${days} ${days === 1 ? "day" : "days"} ago`;
+      const date = new Date(today);
+      // Relative question entries start at yesterday and move back one day
+      // for each following entry (for example, Nov 19, then Nov 18).
+      date.setDate(date.getDate() - (index + 1));
+      const display = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
       if (el.textContent.trim() !== display) el.textContent = display;
     });
   }
