@@ -12,11 +12,11 @@ Both patterns are generated once and saved with `chrome.storage.local`. Use **Re
 
 The **Custom profile stats** section lets you set the displayed **Total active days** and **Max streak** values. Turn its toggle on to replace those two labels' adjacent values on your profile; turn it off to restore the values LeetCode displays. Values must be whole numbers of 0 or more, and are saved locally.
 
-The **Shift question dates back** toggle changes matching question date labels so the first shown date is yesterday, the next is two days ago, and so on. Turn it off to restore the original labels. This setting applies across LeetCode pages and is saved locally.
+The **Shift question dates back** toggle changes matching question date labels so the newest question is dated today and each preceding question is dated one day earlier. Turn it off to restore the original labels. This setting applies across LeetCode pages and is saved locally.
 
 The **Remove dropdown buttons** toggle removes buttons containing a `fa-chevron-down` icon from the page. Turn it off to restore the removed elements. Newly rendered matching buttons are handled while the setting is on.
 
-The **Shift Recent AC dates** toggle changes relative dates beside submission links to `1 day ago`, `2 days ago`, and so on in page order. Turn it off to restore the original date text. Newly rendered submissions are handled while the setting is on.
+The **Shift Recent AC dates** toggle changes relative dates beside submission links so the newest submission reads `today` and older submissions step back one day at a time. Turn it off to restore the original date text. Newly rendered submissions are handled while the setting is on.
 
 ## Check desktop and responsive layouts
 

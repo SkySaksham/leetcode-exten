@@ -34,8 +34,8 @@
         return;
       }
       if (!originalRecentAcDates.has(el)) originalRecentAcDates.set(el, el.textContent);
-      const days = index + 1;
-      const text = `${days} ${days === 1 ? "day" : "days"} ago`;
+      const days = index;
+      const text = days === 0 ? "today" : `${days} ${days === 1 ? "day" : "days"} ago`;
       if (el.textContent.trim() !== text) el.textContent = text;
     });
   }
@@ -78,7 +78,9 @@
       }
       if (!originalDates.has(el)) originalDates.set(el, el.textContent);
       const date = new Date(today);
-      date.setDate(date.getDate() - (index + 1));
+      // Heatmap labels are ordered oldest to newest. Anchor the newest question
+      // to today, then step backward for each preceding question.
+      date.setDate(date.getDate() - (labels.length - index - 1));
       const display = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
       if (el.textContent.trim() !== display) el.textContent = display;
     });
