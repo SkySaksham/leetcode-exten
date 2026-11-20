@@ -16,7 +16,7 @@ The **Shift question dates back** toggle changes matching question date labels s
 
 The **Remove dropdown buttons** toggle removes buttons containing a `fa-chevron-down` icon from the page. Turn it off to restore the removed elements. Newly rendered matching buttons are handled while the setting is on.
 
-The **Shift Recent AC dates** toggle changes relative dates beside submission links so the newest submission reads `today` and older submissions step back one day at a time. Turn it off to restore the original date text. Newly rendered submissions are handled while the setting is on.
+The **Shift Recent AC dates** toggle changes relative dates beside submission links, including minute and hour labels, so the newest submission reads `today` and older submissions step back one day at a time. Turn it off to restore the original date text. Newly rendered submissions are handled while the setting is on.
 
 ## Check desktop and responsive layouts
 

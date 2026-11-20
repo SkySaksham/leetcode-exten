@@ -22,9 +22,9 @@
   let questionDatesShifted = false;
 
   function syncRecentAcDates(settings) {
-    const relativeDatePattern = /^\d+\s+(day|week|month|year)s?\s+ago$/i;
+    const relativeDatePattern = /^(?:just now|today|yesterday|\d+\s+(?:minute|hour|day|week|month|year)s?\s+ago)$/i;
     const recentDates = [...document.querySelectorAll('a[href*="/submissions/detail/"] span')]
-      .filter(el => relativeDatePattern.test(el.textContent.trim()));
+      .filter(el => relativeDatePattern.test(el.textContent.trim()) || originalRecentAcDates.has(el));
     recentDates.forEach((el, index) => {
       if (!settings.recentAcDatesShifted) {
         if (originalRecentAcDates.has(el)) {
