@@ -22,7 +22,9 @@
   let questionDatesShifted = false;
 
   function syncRecentAcDates(settings) {
-    const relativeDatePattern = /^(?:just now|today|yesterday|\d+\s+(?:minute|hour|day|week|month|year)s?\s+ago)$/i;
+    // LeetCode uses several forms, including "an hour ago" and "a few seconds ago".
+    // Match the relative-date marker instead of enumerating each possible duration.
+    const relativeDatePattern = /\b(?:ago|today|yesterday|now)\b/i;
     const recentDates = [...document.querySelectorAll('a[href*="/submissions/detail/"] span')]
       .filter(el => relativeDatePattern.test(el.textContent.trim()) || originalRecentAcDates.has(el));
     recentDates.forEach((el, index) => {
@@ -34,8 +36,8 @@
         return;
       }
       if (!originalRecentAcDates.has(el)) originalRecentAcDates.set(el, el.textContent);
-      const days = index;
-      const text = days === 0 ? "today" : `${days} ${days === 1 ? "day" : "days"} ago`;
+      const days = index + 1;
+      const text = `${days} ${days === 1 ? "day" : "days"} ago`;
       if (el.textContent.trim() !== text) el.textContent = text;
     });
   }
