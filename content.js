@@ -65,16 +65,15 @@
 
   function syncQuestionDates(settings) {
     questionDatesShifted = settings.questionDatesShifted;
-    const datePattern = /^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2}$/i;
+    const datePattern = /^(?:(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)\s+\d{1,2}(?:,?\s+\d{4})?|\d{1,2}\s+(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)(?:\s+\d{4})?|\d{4}-\d{2}-\d{2})$/i;
     const relativeDatePattern = /\bago\b/i;
-    const dateEntries = [...document.querySelectorAll("div.h-full.overflow-hidden.text-ellipsis")];
-    const labels = dateEntries.filter(el => datePattern.test(el.textContent.trim()));
-    // Use the same question-date entries as the absolute-date workflow. Recent AC
-    // submission links stay under their separate handler and toggle.
-    const relativeLabels = dateEntries.filter(el => relativeDatePattern.test(el.textContent.trim()));
+    // Keep this scoped to the question-date entries, so Recent AC keeps using
+    // its existing submission-link handler and toggle.
+    const dateEntries = [...document.querySelectorAll("div.h-full.overflow-hidden.text-ellipsis")]
+      .filter(el => datePattern.test(el.textContent.trim()) || relativeDatePattern.test(el.textContent.trim()));
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    labels.forEach((el, index) => {
+    dateEntries.forEach((el, index) => {
       if (!questionDatesShifted) {
         if (originalDates.has(el)) {
           el.textContent = originalDates.get(el);
@@ -84,24 +83,8 @@
       }
       if (!originalDates.has(el)) originalDates.set(el, el.textContent);
       const date = new Date(today);
-      // Heatmap labels are ordered oldest to newest. Anchor the newest question
-      // to today, then step backward for each preceding question.
-      date.setDate(date.getDate() - (labels.length - index - 1));
-      const display = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
-      if (el.textContent.trim() !== display) el.textContent = display;
-    });
-    relativeLabels.forEach((el, index) => {
-      if (!questionDatesShifted) {
-        if (originalDates.has(el)) {
-          el.textContent = originalDates.get(el);
-          originalDates.delete(el);
-        }
-        return;
-      }
-      if (!originalDates.has(el)) originalDates.set(el, el.textContent);
-      const date = new Date(today);
-      // Relative question entries start at yesterday and move back one day
-      // for each following entry (for example, Nov 19, then Nov 18).
+      // Start at yesterday and move back one day for every matching entry,
+      // regardless of whether it originally showed a date or relative time.
       date.setDate(date.getDate() - (index + 1));
       const display = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
       if (el.textContent.trim() !== display) el.textContent = display;

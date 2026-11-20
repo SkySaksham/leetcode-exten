@@ -12,7 +12,7 @@ Both patterns are generated once and saved with `chrome.storage.local`. Use **Re
 
 The **Custom profile stats** section lets you set the displayed **Total active days** and **Max streak** values. Turn its toggle on to replace those two labels' adjacent values on your profile; turn it off to restore the values LeetCode displays. Values must be whole numbers of 0 or more, and are saved locally.
 
-The **Shift question dates back** toggle changes matching question date labels so they move back one calendar day per entry. It also converts relative labels such as `1 minute ago`, `a few minutes ago`, and `an hour ago` into calendar dates, starting with yesterday. Turn it off to restore the original labels. This setting applies across LeetCode pages and is saved locally.
+The **Shift question dates back** toggle converts matching question date labels, including relative `ago` text and month/day dates, into calendar dates that move back one day per entry, starting with yesterday. Turn it off to restore the original labels. This setting applies across LeetCode pages and is saved locally.
 
 The **Remove dropdown buttons** toggle removes buttons containing a `fa-chevron-down` icon from the page. Turn it off to restore the removed elements. Newly rendered matching buttons are handled while the setting is on.
 
