@@ -66,8 +66,12 @@
   function syncQuestionDates(settings) {
     questionDatesShifted = settings.questionDatesShifted;
     const datePattern = /^(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{1,2}$/i;
-    const labels = [...document.querySelectorAll("div.h-full.overflow-hidden.text-ellipsis")]
-      .filter(el => datePattern.test(el.textContent.trim()));
+    const relativeDatePattern = /\bago\b/i;
+    const dateEntries = [...document.querySelectorAll("div.h-full.overflow-hidden.text-ellipsis")];
+    const labels = dateEntries.filter(el => datePattern.test(el.textContent.trim()));
+    // Use the same question-date entries as the absolute-date workflow. Recent AC
+    // submission links stay under their separate handler and toggle.
+    const relativeLabels = dateEntries.filter(el => relativeDatePattern.test(el.textContent.trim()));
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     labels.forEach((el, index) => {
@@ -84,6 +88,19 @@
       // to today, then step backward for each preceding question.
       date.setDate(date.getDate() - (labels.length - index - 1));
       const display = date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      if (el.textContent.trim() !== display) el.textContent = display;
+    });
+    relativeLabels.forEach((el, index) => {
+      if (!questionDatesShifted) {
+        if (originalDates.has(el)) {
+          el.textContent = originalDates.get(el);
+          originalDates.delete(el);
+        }
+        return;
+      }
+      if (!originalDates.has(el)) originalDates.set(el, el.textContent);
+      const days = index + 1;
+      const display = `${days} ${days === 1 ? "day" : "days"} ago`;
       if (el.textContent.trim() !== display) el.textContent = display;
     });
   }
